@@ -68,6 +68,9 @@ Shader "Funly/Sky/StarrySky" {
     _MoonHDRBoost("Moon HDR Bloom Boost", Range(1, 10)) = 1                // Control brightness for HDR bloom filter.
     [HideInInspector]_MoonComputedPositionData("Moon Position Data" , Vector) = (0, 0, 0, 0)  // Precomputed position data.
     [HideInInspector]_MoonComputedRotationData("Moon Rotation Data", Vector) = (0, 0, 0, 0)   // Precomputed rotation data.
+
+	[HideInInspector]UNITY_TWO_PI("UNITY_TWO_PI", float) = 6.2831853
+	[HideInInspector]UNITY_HALF_PI("UNITY_HALF_PI", float) = 1.570796325
   }
 
   SubShader {
@@ -99,8 +102,8 @@ Shader "Funly/Sky/StarrySky" {
         float3 smoothVertex : TEXCOORD5;
       };
 
-	  float UNITY_TWO_PI = 6.283185308;
-	  float UNITY_HALF_PI = 1.570796327;
+	  float UNITY_TWO_PI;
+	  float UNITY_HALF_PI;
       // Cubemap.
       samplerCUBE _MainTex;
       float4 _MainTex_ST;
@@ -244,9 +247,9 @@ Shader "Funly/Sky/StarrySky" {
       float4 GetDataFromTexture(sampler2D tex, float2 uv) {
         float4 col = tex2Dlod(tex, float4(uv.x, uv.y, 0.0f, 0.0f));
 
-        #if defined(UNITY_COLORSPACE_GAMMA) == false
+        /*#if defined(UNITY_COLORSPACE_GAMMA) == false
         col.xyz = LinearToGammaSpace(col.xyz);
-        #endif
+        #endif*/
 
         return col;
       }
