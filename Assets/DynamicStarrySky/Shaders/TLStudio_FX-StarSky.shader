@@ -10,8 +10,9 @@
     [NoScaleOffset]_MainTex("Background", 2D) = "Black" {}      // Cubemap for custom background behind stars.
 
     // Star fading.
-    _StarFadeBegin("Star Fade Begin", Range(-1, 1)) = .067                // Height to begin star fade in.
-    _StarFadeEnd("Star Fade End", Range(-1, 1)) = .36                     // Height where all stars are faded in at.
+	_StarFadeBegin("Star Fade Begin", Range(-1, 1)) = .067                // Height to begin star fade in.
+	_StarFadeEnd("Star Fade End", Range(-1, 1)) = .36                     // Height where all stars are faded in at.
+	_FadeIntensity("star fade Intensity", float) = 500
 
     // Star Layer 1.
     [NoScaleOffset]_StarLayer1Tex("Star 1 Texture", 2D) = "white" {}
@@ -52,16 +53,16 @@
     // Shrink stars closer to horizon.
     _HorizonScaleFactor("Star Horizon Scale Factor", Range(0, 1)) = .7
 
-    // Moon properties.
-    [NoScaleOffset]_MoonTex("Moon Texture", 2D) = "white" {}               // Moon image.
-    _MoonColor("Moon Color", Color) = (.66, .65, .55, 1)                   // Moon tint color.
-    _MoonHeight("Moon Vertical Position", Range(0, 1)) = .89               // Height percent on mesh.
-    _MoonAngle("Moon Horizontal Position", Range(0, 1)) =  1.57            // Rotation percent around mesh.
-    _MoonRadius("Moon Size", Range(0, 1)) = .1                             // Radius of the moon.
-    _MoonEdgeFade("Moon Edge Feathering", Range(0.0001, .9999)) = .3       // Soften edges of moon texture.
-    _MoonHDRBoost("Moon HDR Bloom Boost", Range(1, 10)) = 1                // Control brightness for HDR bloom filter.
-    [HideInInspector]_MoonComputedPositionData("Moon Position Data" , Vector) = (0, 0, 0, 0)  // Precomputed position data.
-    [HideInInspector]_MoonComputedRotationData("Moon Rotation Data", Vector) = (0, 0, 0, 0)   // Precomputed rotation data.
+    //// Moon properties.
+    //[NoScaleOffset]_MoonTex("Moon Texture", 2D) = "white" {}               // Moon image.
+    //_MoonColor("Moon Color", Color) = (.66, .65, .55, 1)                   // Moon tint color.
+    //_MoonHeight("Moon Vertical Position", Range(0, 1)) = .89               // Height percent on mesh.
+    //_MoonAngle("Moon Horizontal Position", Range(0, 1)) =  1.57            // Rotation percent around mesh.
+    //_MoonRadius("Moon Size", Range(0, 1)) = .1                             // Radius of the moon.
+    //_MoonEdgeFade("Moon Edge Feathering", Range(0.0001, .9999)) = .3       // Soften edges of moon texture.
+    //_MoonHDRBoost("Moon HDR Bloom Boost", Range(1, 10)) = 1                // Control brightness for HDR bloom filter.
+    //[HideInInspector]_MoonComputedPositionData("Moon Position Data" , Vector) = (0, 0, 0, 0)  // Precomputed position data.
+    //[HideInInspector]_MoonComputedRotationData("Moon Rotation Data", Vector) = (0, 0, 0, 0)   // Precomputed rotation data.
 
 	[HideInInspector]UNITY_TWO_PI("UNITY_TWO_PI", float) = 6.2831853
 	[HideInInspector]UNITY_HALF_PI("UNITY_HALF_PI", float) = 1.570796325
@@ -118,6 +119,7 @@
 
       float _StarFadeBegin;
       float _StarFadeEnd;
+	  float _FadeIntensity;
 
       // Star Layer 1
       sampler2D _StarLayer1Tex;
@@ -403,7 +405,7 @@
         v2f o;
         o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 		//o.verticalPosition = clamp(v.vertex.y, -1, 1);
-		o.verticalPosition = clamp(v.vertex.z / v.vertex.w, -1, 1);
+		o.verticalPosition = clamp(v.vertex.z / (_FadeIntensity * v.vertex.w), -1, 1);
 		o.smoothVertex = v.vertex;
 		//o.smoothVertex = v.vertex/1000;
 		o.uv = v.uv0;
