@@ -1,19 +1,13 @@
-﻿// Copyright(c) 2017 Funly LLC
-//
-// Author: Jason Ederle
-// Description: Generates a customizable dynamic starry sky.
-// Contact: jason@funly.io
-
-Shader "Funly/Sky/StarrySky" {
+﻿Shader "TLStudio/FX/StarSky" {
   Properties {
-    // Gradient Sky.
-    _GradientSkyColor("Sky Color", Color) = (.47, .45, .75, 1)            // Color of sky.
-    _GradientHorizonColor("Horizon Color", Color) = (.7, .53, .69, 1)     // Color of horizon.
-    _GradientFadeBegin("Horizon Fade Begin", Range(-1, 1)) = -.179        // Position to begin horizon fade into sky.
-    _GradientFadeEnd("Horizon Fade End", Range(-1, 1)) = .302             // Position to end horizon fade into sky.
+    //// Gradient Sky.
+    //_GradientSkyColor("Sky Color", Color) = (.47, .45, .75, 1)            // Color of sky.
+    //_GradientHorizonColor("Horizon Color", Color) = (.7, .53, .69, 1)     // Color of horizon.
+    //_GradientFadeBegin("Horizon Fade Begin", Range(-1, 1)) = -.179        // Position to begin horizon fade into sky.
+    //_GradientFadeEnd("Horizon Fade End", Range(-1, 1)) = .302             // Position to end horizon fade into sky.
 
     // Cubemap background.
-    [NoScaleOffset]_MainTex("Background Cubemap", CUBE) = "white" {}      // Cubemap for custom background behind stars.
+    [NoScaleOffset]_MainTex("Background", 2D) = "Black" {}      // Cubemap for custom background behind stars.
 
     // Star fading.
     _StarFadeBegin("Star Fade Begin", Range(-1, 1)) = .067                // Height to begin star fade in.
@@ -22,37 +16,37 @@ Shader "Funly/Sky/StarrySky" {
     // Star Layer 1.
     [NoScaleOffset]_StarLayer1Tex("Star 1 Texture", 2D) = "white" {}
     _StarLayer1Color("Star Layer 1 - Color", Color) = (1, 1, 1, 1)                              // Color tint for stars.
-    _StarLayer1Density("Star Layer 1 - Star Density", Range(0, .05)) = .01                      // Space between stars.
+    _StarLayer1Density("Star Layer 1 - Star Density", Range(0, .1)) = .01                      // Space between stars.
     _StarLayer1MaxRadius("Star Layer 1 - Star Size", Range(0, .1)) = .007                       // Max radius of stars.
     _StarLayer1TwinkleAmount("Star Layer 1 - Twinkle Amount", Range(0, 1)) = .775               // Percent of star twinkle amount.
     _StarLayer1TwinkleSpeed("Star Layer 1 - Twinkle Speed", float) = 2.0                        // Twinkle speed.
     _StarLayer1RotationSpeed("Star Layer 1 - Rotation Speed", float) = 2                        // Rotation speed of stars.
     _StarLayer1EdgeFade("Star Layer 1 - Edge Feathering", Range(0.0001, .9999)) = .2            // Softness of star blending with background.
-    _StarLayer1HDRBoost("Star Layer 1 - HDR Bloom Boost", Range(1, 10)) = 1.0                   // Boost star colors so they glow with bloom filters.
+    _StarLayer1HDRBoost("Star Layer 1 - Bloom Boost", Range(1, 10)) = 1.0                   // Boost star colors so they glow with bloom filters.
     [HideInInspector]_StarLayer1DataTex("Star Layer 1 - Data Image", 2D) = "black" {}           // Data image with star positions.
 
     // Star Layer 2. - See property descriptions from star layer 1.
     [NoScaleOffset]_StarLayer2Tex("Star 2 Texture", 2D) = "white" {}
     _StarLayer2Color("Star Layer 2 - Color", Color) = (1, .5, .96, 1)
-    _StarLayer2Density("Star Layer 2 - Star Density", Range(0, .05)) = .01
+    _StarLayer2Density("Star Layer 2 - Star Density", Range(0, .1)) = .01
     _StarLayer2MaxRadius("Star Layer 2 - Star Size", Range(0, .4)) = .014
     _StarLayer2TwinkleAmount("Star Layer 2 - Twinkle Amount", Range(0, 1)) = .875
     _StarLayer2TwinkleSpeed("Star Layer 2 - Twinkle Speed", float) = 3.0
     _StarLayer2RotationSpeed("Star Layer 2 - Rotation Speed", float) = 2
     _StarLayer2EdgeFade("Star Layer 2 - Edge Feathering", Range(0.0001, .9999)) = .2
-    _StarLayer2HDRBoost("Star Layer 2 - HDR Bloom Boost", Range(1, 10)) = 1.0
+    _StarLayer2HDRBoost("Star Layer 2 - Bloom Boost", Range(1, 10)) = 1.0
     [HideInInspector]_StarLayer2DataTex("Star Layer 2 - Data Image", 2D) = "black" {}
 
     // Star Layer 3. - See property descriptions from star layer 1.
     [NoScaleOffset]_StarLayer3Tex("Star 3 Texture", 2D) = "white" {}
     _StarLayer3Color("Star Layer 3 - Color", Color) = (.22, 1, .55, 1)
-    _StarLayer3Density("Star Layer 3 - Star Density", Range(0, .05)) = .01
+    _StarLayer3Density("Star Layer 3 - Star Density", Range(0, .1)) = .01
     _StarLayer3MaxRadius("Star Layer 3 - Star Size", Range(0, .4)) = .01
     _StarLayer3TwinkleAmount("Star Layer 3 - Twinkle Amount", Range(0, 1)) = .7
     _StarLayer3TwinkleSpeed("Star Layer 3 - Twinkle Speed", float) = 1.0
     _StarLayer3RotationSpeed("Star Layer 3 - Rotation Speed", float) = 2
     _StarLayer3EdgeFade("Star Layer 3 - Edge Feathering", Range(0.0001, .9999)) = .2
-    _StarLayer3HDRBoost("Star Layer 3 - HDR Bloom Boost", Range(1, 10)) = 1.0
+    _StarLayer3HDRBoost("Star Layer 3 - Bloom Boost", Range(1, 10)) = 1.0
     [HideInInspector]_StarLayer3DataTex("Star Layer 1 - Data Image", 2D) = "black" {}
 
     // Shrink stars closer to horizon.
@@ -74,17 +68,21 @@ Shader "Funly/Sky/StarrySky" {
   }
 
   SubShader {
-    Tags { "RenderType"="Opaque" "Queue"="Background" "IgnoreProjector"="true" }
-    LOD 100
-    Cull Off
+    Tags { "RenderType"="Background" "Queue"="Transparent-200" "IgnoreProjector"="true" }
+
+	Lighting Off
+	Fog{ Mode Off }
+
+	ZWrite Off
+	LOD 100
 
     Pass {
       CGPROGRAM
-      #pragma shader_feature GRADIENT_BACKGROUND
+      //#pragma shader_feature GRADIENT_BACKGROUND
       #pragma shader_feature STAR_LAYER_1
       #pragma shader_feature STAR_LAYER_2
       #pragma shader_feature STAR_LAYER_3
-      #pragma shader_feature MOON
+      //#pragma shader_feature MOON
 
       #pragma vertex vert
       #pragma fragment frag
@@ -94,18 +92,20 @@ Shader "Funly/Sky/StarrySky" {
       struct appdata {
         float4 vertex : POSITION;
         float3 normal : NORMAL;
+		float2 uv0 : TEXCOORD0;
       };
 
       struct v2f {
         float verticalPosition : TEXCOORD3;
         float4 vertex : SV_POSITION;
         float3 smoothVertex : TEXCOORD5;
+		float2 uv : TEXCOORD6;
       };
 
 	  float UNITY_TWO_PI;
 	  float UNITY_HALF_PI;
       // Cubemap.
-      samplerCUBE _MainTex;
+      sampler2D _MainTex;
       float4 _MainTex_ST;
 
       // Gradient sky.
@@ -402,8 +402,11 @@ Shader "Funly/Sky/StarrySky" {
       v2f vert(appdata v) {
         v2f o;
         o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-        o.verticalPosition = clamp(v.vertex.y, -1, 1);
-        o.smoothVertex = v.vertex;
+		//o.verticalPosition = clamp(v.vertex.y, -1, 1);
+		o.verticalPosition = clamp(v.vertex.z / v.vertex.w, -1, 1);
+		o.smoothVertex = v.vertex;
+		//o.smoothVertex = v.vertex/1000;
+		o.uv = v.uv0;
 
         return o;
       }
@@ -426,7 +429,7 @@ Shader "Funly/Sky/StarrySky" {
         half fadePercent = smoothstep(_GradientFadeBegin, _GradientFadeEnd, i.verticalPosition);
         half3 background = lerp(_GradientHorizonColor, _GradientSkyColor, fadePercent);
 #else
-        half3 background = texCUBE(_MainTex, i.smoothVertex);
+        half3 background = tex2D(_MainTex, TRANSFORM_TEX(i.uv, _MainTex));
 #endif
         
 #ifdef MOON
