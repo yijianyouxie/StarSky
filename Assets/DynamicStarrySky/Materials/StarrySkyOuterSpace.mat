@@ -123,7 +123,7 @@ Material:
       data:
         first:
           name: _StarLayer2MaxRadius
-        second: 0
+        second: 0.079
       data:
         first:
           name: _StarLayer2TwinkleAmount
@@ -151,7 +151,7 @@ Material:
       data:
         first:
           name: _StarLayer3MaxRadius
-        second: 0
+        second: 0.046
       data:
         first:
           name: _StarLayer3TwinkleAmount

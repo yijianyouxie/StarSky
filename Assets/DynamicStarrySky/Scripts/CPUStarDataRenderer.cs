@@ -94,6 +94,12 @@ public class CPUStarDataRenderer : BaseStarDataRenderer {
     return stars;
   }
 
+    /// <summary>
+    /// 找到距离球体上的离spot最近的点数据
+    /// </summary>
+    /// <param name="spot"></param>
+    /// <param name="starPoints"></param>
+    /// <returns></returns>
   StarPoint NearestStarPoint(Vector3 spot, List<StarPoint> starPoints)
   {
     StarPoint nearbyPoint = new StarPoint(Vector3.zero, 0, 0, 0);

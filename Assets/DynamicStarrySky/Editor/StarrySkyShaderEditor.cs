@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 // Custom editor for starry sky to compile in/out features and prepare data files.
 public class StarrySkyShaderEditor : ShaderGUI {
-  private int imageSize = 256;
+  //星星位置数据图片尺寸
+  private int imageSize = 128;
   private string progressTitle = "Dynamic Starry Sky";
   private string progressMessage = "Rebuilding star system...";
   private const int starLayersCount = 3;
@@ -61,17 +62,17 @@ public class StarrySkyShaderEditor : ShaderGUI {
       }
     }
 
-    // Skybox checkbox.
-    bool useGradientSky = EditorGUILayout.Toggle("Use Gradient Background",
-      DoesKeywordExists(keywords, "GRADIENT_BACKGROUND"));
-    // enable or disable the keyword based on checkbox
-    if (useGradientSky) {
-      material.EnableKeyword("GRADIENT_BACKGROUND");
-      RemovePropertiesWithString(renderProps, "_MainTex");
-    } else {
-      material.DisableKeyword("GRADIENT_BACKGROUND");
-      RemovePropertiesWithString(renderProps, "_Gradient");
-    }
+    //// Skybox checkbox.
+    //bool useGradientSky = EditorGUILayout.Toggle("Use Gradient Background",
+    //  DoesKeywordExists(keywords, "GRADIENT_BACKGROUND"));
+    //// enable or disable the keyword based on checkbox
+    //if (useGradientSky) {
+    //  material.EnableKeyword("GRADIENT_BACKGROUND");
+    //  RemovePropertiesWithString(renderProps, "_MainTex");
+    //} else {
+    //  material.DisableKeyword("GRADIENT_BACKGROUND");
+    //  RemovePropertiesWithString(renderProps, "_Gradient");
+    //}
 
     // Star Layer 1 Enable.
     bool starLayer1Enabled = CheckToggleFeature(
@@ -103,16 +104,16 @@ public class StarrySkyShaderEditor : ShaderGUI {
       "_StarLayer3");
     SetStarLayerEnabled("StarLayer3", starLayer3Enabled);
 
-    // Moon checkbox.
-    bool useMoon = EditorGUILayout.Toggle("Enable Moon",
-      DoesKeywordExists(keywords, "MOON"));
-    if (useMoon) {
-      material.EnableKeyword("MOON");
-      UpdateMoonData(allProps);
-    } else {
-      material.DisableKeyword("MOON");
-      RemovePropertiesWithString(renderProps, "_Moon");
-    }
+    //// Moon checkbox.
+    //bool useMoon = EditorGUILayout.Toggle("Enable Moon",
+    //  DoesKeywordExists(keywords, "MOON"));
+    //if (useMoon) {
+    //  material.EnableKeyword("MOON");
+    //  UpdateMoonData(allProps);
+    //} else {
+    //  material.DisableKeyword("MOON");
+    //  RemovePropertiesWithString(renderProps, "_Moon");
+    //}
 
     // Hide all the precomputed data fields.
     RemovePropertiesWithString(renderProps, "Data");
